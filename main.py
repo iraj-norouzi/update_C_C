@@ -85,6 +85,6 @@ def update():
     subprocess.call('chmod 777 dependensi.sh',shell=True)
     subprocess.call('bash dependensi.sh',shell=True)
     subprocess.call('python /usr/local/IBSng/scripts/python_dependency_setup.py install',shell=True)
-    subprocess.call('/etc/init.d/IBSng',shell=True)
+    subprocess.call('/etc/init.d/IBSng restart',shell=True)
     ##################################################################
 start()
