@@ -67,10 +67,13 @@ def keys(key):
         exit()
 ###############################################################
 def update():
+    print('cp -rp /usr/local/IBSng /usr/local/IBSng-old2')
     subprocess.call('cp -rp /usr/local/IBSng /usr/local/IBSng-old2',shell=True)
+    print('cp -rp /usr/local/src /usr/local/src-old2')
     subprocess.call('cp -rp /usr/local/src /usr/local/src-old',shell=True)
+    time.sleep(2)
+    print('ibs_backup_custom')
     subprocess.call('ibs_backup_custom',shell=True)
-    print('Press Any Key ...')
     fh = open("dependensi.sh","w+")
     fh.write('#!/bin/bash\n')
     fh.write('psql -U ibs IBSng < /usr/local/IBSng/db/from_B1.33_upgrade.sql\n')
@@ -85,6 +88,8 @@ def update():
     subprocess.call('chmod 777 dependensi.sh',shell=True)
     subprocess.call('bash dependensi.sh',shell=True)
     subprocess.call('python /usr/local/IBSng/scripts/python_dependency_setup.py install',shell=True)
+    
+    print('END UPDATE NOW RESTART IBSng !!! ')
     subprocess.call('/etc/init.d/IBSng restart',shell=True)
     ##################################################################
 start()
