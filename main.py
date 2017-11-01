@@ -1,6 +1,8 @@
 import subprocess
 import time
 import datetime
+import shutil
+import errno
 key = 'test'
 t = str(datetime.datetime.now())
 ########################################################
@@ -36,17 +38,27 @@ def execute():
             fh.write(" start Update IBSng With Out Usb " + t)
             fh.close()
             print('START UPDATE NOW ! ')
+            copy('/usr/local/IBSng', '/usr/local/IBSng-'+t)
+            copy('/usr/local/src', '/usr/local/src-'+t)
+            print('ibs_backup_custom')
+            subprocess.call('ibs_backup_custom',shell=True)
             subprocess.call('install_ibs --no-usb',shell=True)
-        update()
+            update()
+            
         else:
             print('Start Update IBSng With Out Usb')
             fh = open("/var/log/tools/ibs_install.log" , "a+")
             fh.write(" start Update IBSng With  Usb" + t)
             fh.close()
-        print('START UPDATE NOW ! ')
-        time.sleep(2)
-        subprocess.call('install_ibs ',shell=True)
-        update()
+            print('START UPDATE NOW ! ')
+            time.sleep(2)
+            
+            copy('/usr/local/IBSng', '/usr/local/IBSng-'+t)
+            copy('/usr/local/src', '/usr/local/src-'+t)
+            print('ibs_backup_custom')
+            subprocess.call('ibs_backup_custom',shell=True)
+            subprocess.call('install_ibs ',shell=True)
+            update()
     elif sel == 'n' or sel == 'N':
         print('exir to update  ')
         exit()
@@ -54,7 +66,7 @@ def execute():
 #############software or hardware key##################
 #######################################################
 def keys(key):
-    if key == "#starter_args= usb":
+    if key == "#starter_args= usb" or key == '':
         print('your key is a Software ! ')
         time.sleep(1)
         return True
@@ -67,13 +79,13 @@ def keys(key):
         exit()
 ###############################################################
 def update():
-    print('cp -rp /usr/local/IBSng /usr/local/IBSng-old2')
-    subprocess.call('cp -rp /usr/local/IBSng /usr/local/IBSng-old2',shell=True)
-    print('cp -rp /usr/local/src /usr/local/src-old2')
-    subprocess.call('cp -rp /usr/local/src /usr/local/src-old',shell=True)
+    
+    #print('cp -rp /usr/local/IBSng /usr/local/IBSng-`date`')
+    #subprocess.call('cp -rp /usr/local/IBSng /usr/local/IBSng-`date`',shell=True)
+    #print('cp -rp /usr/local/src /usr/local/src-``date')
+    #subprocess.call('cp -rp /usr/local/src /usr/local/src-`date`',shell=True)
     time.sleep(2)
-    print('ibs_backup_custom')
-    subprocess.call('ibs_backup_custom',shell=True)
+    
     fh = open("dependensi.sh","w+")
     fh.write('#!/bin/bash\n')
     fh.write('psql -U ibs IBSng < /usr/local/IBSng/db/from_B1.33_upgrade.sql\n')
@@ -91,5 +103,19 @@ def update():
     
     print('END UPDATE NOW RESTART IBSng !!! ')
     subprocess.call('/etc/init.d/IBSng restart',shell=True)
-    ##################################################################
+##################################################################
+
+def copy(src, dest):
+    try:
+        shutil.copytree(src, dest)
+    except OSError as e:
+        # If the error was caused because the source wasn't a directory
+        if e.errno == errno.ENOTDIR:
+            shutil.copy(src, dest)
+        else:
+            print('Directory not copied. Error: %s' % e)
+
+
+
+####################################################
 start()
