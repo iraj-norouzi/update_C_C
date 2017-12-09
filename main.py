@@ -92,6 +92,7 @@ def update():
     fh.write('psql -U ibs IBSng < /usr/local/IBSng/db/from_B1.34_upgrade.sql\n')
     fh.write('psql -U ibs IBSng < /usr/local/IBSng/db/from_B1.35_upgrade.sql\n')
     fh.write('psql -U ibs IBSng < /usr/local/IBSng/db/from_B1.36_upgrade.sql\n')
+    fh.write('psql -U ibs IBSng < /usr/local/IBSng/db/from_C1.37_upgrade.sql\n')
     fh.write('psql -U ibs IBSng < /usr/local/IBSng/db/defs.sql\n')
     fh.write('psql -U ibs IBSng < /usr/local/IBSng/db/table.sql\n')
     fh.write('psql -U ibs IBSng < /usr/local/IBSng/db/function.sql\n')
